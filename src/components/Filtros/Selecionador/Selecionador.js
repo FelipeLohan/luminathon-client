@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import imgProfissional from "./image 6.png";
 
+// Styled Components
 const SelecionadorContainer = styled.section`
   margin: 0 auto;
   width: 30%;
@@ -12,6 +14,7 @@ const SelecionadorContainer = styled.section`
   background-color: #fff;
   gap: 20px;
   border-radius: 6px;
+  margin-top: 30px;
 `;
 
 const SelecionadorCepLogradouro = styled.div`
@@ -56,43 +59,64 @@ const ButtonPesquisar = styled.button`
   }
 `;
 
+// SECTION RESULTADO
 const ContainerResultado = styled.section`
+  width: 50%;
   margin: 0 auto;
+  margin-top: 75px;
+  margin-bottom: 75px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 40px;
-  background: red;
   gap: 20px;
   border-radius: 6px;
   color: #fff;
-  background-color: #C3A289;
-  padding: 20px;
-  gap: 20px;
-  height: 200px;
-
+  background-color: #fff;
+  padding: 50px 20px;
 `;
 
-//SECTION RESULTADO:
+const CardResultado = styled.div`
+  display: flex;
+  gap: 20px;
+  background-color: #EEF5ED;
+  border-radius: 6px;
+  padding: 20px;
+  color: #333;
+  width: 80%;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+`;
 
+const MarcarConsulta = styled.div`
+  display: flex;
+  align-items: center;
 
-let APIresult = [];
+  button{
+    padding: 20px;
+    background:rgb(224, 255, 226);
+    border: 1px solid rgb(246, 255, 247);
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+button:hover{
+  background: rgb(189, 243, 193);
+  transition: 0.3s;
+  color: #000;
+}
+`
 
 
 function Selecionador() {
-  // Estados para armazenar os valores dos selects
   const [ordenarPor, setOrdenarPor] = useState("");
   const [especialidade, setEspecialidade] = useState("");
+  const [APIresult, setAPIresult] = useState([]); // Estado para armazenar os resultados da API
 
   const handleSubmit = async () => {
-    // Criação do objeto com os valores dos selects
     const data = {
       categoria: especialidade,
       ordenacao: ordenarPor,
     };
-
-
 
     console.log("Enviando dados:", data);
 
@@ -111,54 +135,68 @@ function Selecionador() {
 
       const jsonResponse = await response.json();
       console.log("Resposta da API:", jsonResponse);
-      APIresult = jsonResponse;
-      console.log(APIresult);
-      const plainObject = JSON.parse(APIresult);
-
+      setAPIresult(jsonResponse.profissionais); // Atualiza o estado com os dados da API
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
   };
+
   return (
     <>
-    <SelecionadorContainer>
-      <SelecionadorCepLogradouro>
-        <input name="logradouro" placeholder="Logradouro" />
-        <input name="cep" placeholder="Codigo Postal (CEP)" />
-      </SelecionadorCepLogradouro>
+      <SelecionadorContainer>
+        <SelecionadorCepLogradouro>
+          <input name="logradouro" placeholder="Logradouro" />
+          <input name="cep" placeholder="Codigo Postal (CEP)" />
+        </SelecionadorCepLogradouro>
 
-      <SelecionadorValorEspecialidade>
-        {/* Capturando os valores dos selects */}
-        <select
-          id="valor"
-          name="Valor"
-          value={ordenarPor}
-          onChange={(e) => setOrdenarPor(e.target.value)}
+        <SelecionadorValorEspecialidade>
+          <select
+            id="valor"
+            name="Valor"
+            value={ordenarPor}
+            onChange={(e) => setOrdenarPor(e.target.value)}
           >
-          <option value="">Ordenar por...</option>
-          <option value="avaliacao">Avaliação</option>
-          <option value="valor">Valor</option>
-        </select>
-        <select
-          id="especialidade"
-          name="Especialidade"
-          value={especialidade}
-          onChange={(e) => setEspecialidade(e.target.value)}
+            <option value="">Ordenar por...</option>
+            <option value="avaliacao">Avaliação</option>
+            <option value="valor">Valor</option>
+          </select>
+          <select
+            id="especialidade"
+            name="Especialidade"
+            value={especialidade}
+            onChange={(e) => setEspecialidade(e.target.value)}
           >
-          <option value="">Especialidade...</option>
-          <option value="Fisioterapeutas">Fisioterapeuta</option>
-          <option value="Psicologos">Psicologo</option>
-          <option value="Nutricionistas">Nutricionista</option>
-        </select>
-      </SelecionadorValorEspecialidade>
+            <option value="">Especialidade...</option>
+            <option value="Fisioterapeutas">Fisioterapeuta</option>
+            <option value="Psicologos">Psicologo</option>
+            <option value="Nutricionistas">Nutricionista</option>
+          </select>
+        </SelecionadorValorEspecialidade>
 
-      <ButtonPesquisar onClick={handleSubmit}>Pesquisar</ButtonPesquisar>
-    </SelecionadorContainer>
-    <ContainerResultado>
-    <h1>aaa</h1>
+        <ButtonPesquisar onClick={handleSubmit}>Pesquisar</ButtonPesquisar>
+      </SelecionadorContainer>
 
-    </ContainerResultado>
-    
+      {/* Renderizando os resultados */}
+      <ContainerResultado>
+        {APIresult.length > 0 ? (
+          APIresult.map((item) => (
+            <CardResultado key={item.id}>
+              <img src={imgProfissional} />
+              <div>
+                <h3>{item.nome}</h3>
+                <p>Especialidade: {especialidade}</p>
+                <p>Avaliação: {item.avaliacao}</p>
+              </div>
+              <MarcarConsulta>
+                <button>Marcar Consulta</button>
+              </MarcarConsulta>
+
+            </CardResultado>
+          ))
+        ) : (
+          <p>Nenhum resultado encontrado</p>
+        )}
+      </ContainerResultado>
     </>
   );
 }

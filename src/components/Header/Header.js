@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import headerImg from "./image/headerImg.png";
+import logo from "./image/Component 2.svg";
+import user from "./image/user-svgrepo-com 1.svg";
 import { Link } from 'react-router-dom';
 
 const HeaderIMG = styled.header`
@@ -35,12 +37,22 @@ const HeaderContainer = styled.div`
 
   }
 `
+const LogoHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+`
 
 function Header() {
   return (
     
     <HeaderIMG>
+      <LogoHeader>
+      <img src={logo} />
+      <img src={user} />
+      </LogoHeader>
       <HeaderContainer>
+        
       <h1>A ferramenta ideal para suas consultas</h1>
       <h2>Venha fazer parte da inovação! Nossa ferramenta simplifica sua vida reduzindo o tempo gasto achando um profissional de saúde!</h2>  
       <a href="#filtros">Comece agora</a>
