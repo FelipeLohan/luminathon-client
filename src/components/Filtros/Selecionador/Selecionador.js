@@ -56,11 +56,29 @@ const ButtonPesquisar = styled.button`
   }
 `;
 
+const ContainerResultado = styled.section`
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+  background: red;
+  gap: 20px;
+  border-radius: 6px;
+  color: #fff;
+  background-color: #C3A289;
+  padding: 20px;
+  gap: 20px;
+  height: 200px;
+
+`;
+
 //SECTION RESULTADO:
 
 
 let APIresult = [];
-let especialidadeSelect;
+
 
 function Selecionador() {
   // Estados para armazenar os valores dos selects
@@ -74,7 +92,7 @@ function Selecionador() {
       ordenacao: ordenarPor,
     };
 
-    especialidadeSelect = especialidade;
+
 
     console.log("Enviando dados:", data);
 
@@ -95,12 +113,14 @@ function Selecionador() {
       console.log("Resposta da API:", jsonResponse);
       APIresult = jsonResponse;
       console.log(APIresult);
+      const plainObject = JSON.parse(APIresult);
+
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
     }
   };
-
   return (
+    <>
     <SelecionadorContainer>
       <SelecionadorCepLogradouro>
         <input name="logradouro" placeholder="Logradouro" />
@@ -114,7 +134,7 @@ function Selecionador() {
           name="Valor"
           value={ordenarPor}
           onChange={(e) => setOrdenarPor(e.target.value)}
-        >
+          >
           <option value="">Ordenar por...</option>
           <option value="avaliacao">Avaliação</option>
           <option value="valor">Valor</option>
@@ -124,7 +144,7 @@ function Selecionador() {
           name="Especialidade"
           value={especialidade}
           onChange={(e) => setEspecialidade(e.target.value)}
-        >
+          >
           <option value="">Especialidade...</option>
           <option value="Fisioterapeutas">Fisioterapeuta</option>
           <option value="Psicologos">Psicologo</option>
@@ -134,14 +154,12 @@ function Selecionador() {
 
       <ButtonPesquisar onClick={handleSubmit}>Pesquisar</ButtonPesquisar>
     </SelecionadorContainer>
-  );
-}
+    <ContainerResultado>
+    <h1>aaa</h1>
 
-function Resultado() {
-  return (
-    <section>
-      
-    </section>
+    </ContainerResultado>
+    
+    </>
   );
 }
 
